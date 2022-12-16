@@ -35,4 +35,10 @@ impl<'a, M: Middleware> Staking<M> {
         let contract = Contract::new(address.into(), STAKING_ABI.clone(), client);
         Self(contract)
     }
+
+    pub fn nft_position(&self, main_id: U256, nft_id: U256) -> ContractCall<M, (U256, U256)> {
+        self.0
+            .method("nftPosition", (main_id, nft_id))
+            .expect("nftPosition method not found")
+    }
 }

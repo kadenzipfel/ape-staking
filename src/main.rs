@@ -60,5 +60,16 @@ async fn run<P: JsonRpcClient + 'static>(opts: Opts, provider: Provider<P>) -> a
         static_provider.clone(),
     );
 
+    let position = staking
+        .nft_position(
+            U256::from_dec_str("2").unwrap(),
+            U256::from_dec_str("9881").unwrap(),
+        )
+        .call()
+        .await
+        .unwrap();
+
+    info!("Position: {:?}", position);
+
     Ok(())
 }
