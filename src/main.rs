@@ -1,9 +1,7 @@
 use ethers::prelude::*;
-use ethers_flashbots::FlashbotsMiddleware;
 use gumdrop::Options;
-use reqwest::Url;
 use serde_json::{Map, Value};
-use std::{convert::TryFrom, sync::Arc, time::Duration};
+use std::{convert::TryFrom, sync::Arc};
 use tracing::{info, subscriber};
 use tracing_subscriber::FmtSubscriber;
 
@@ -42,19 +40,10 @@ async fn main() -> anyhow::Result<()> {
 
 async fn run<P: JsonRpcClient + 'static>(opts: Opts, provider: Provider<P>) -> anyhow::Result<()> {
     info!("Starting...");
-    // let provider = provider.interval(Duration::from_millis(opts.interval));
-    // let client = FlashbotsMiddleware::new(
-    //     provider,
-    //     Url::parse("https://relay.flashbots.net")?,
-    //     bundle_signer.clone(),
-    // );
-    // let client = SignerMiddleware::new_with_provider_chain(client, wallet.clone()).await?;
-    // let client = Arc::new(client);
 
     info!("Node: {}", opts.rpc_url);
 
-    let static_provider =
-        Arc::new(Provider::<Http>::try_from(&opts.rpc_url).expect("Failed to initialize provider"));
+    let static_provider = Arc::new(provider);
 
     let staking = Staking::new(
         STAKING_CONTRACT.parse::<Address>().unwrap(),
