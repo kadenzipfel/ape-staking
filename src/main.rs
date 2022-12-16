@@ -71,5 +71,20 @@ async fn run<P: JsonRpcClient + 'static>(opts: Opts, provider: Provider<P>) -> a
 
     info!("Position: {:?}", position);
 
+    for i in 1..3 {
+        for j in 0..COLLECTION_SIZES[i] {
+            let position = staking
+                .nft_position(
+                    U256::from_dec_str(&i.to_string()).unwrap(),
+                    U256::from_dec_str(&j.to_string()).unwrap(),
+                )
+                .call()
+                .await
+                .unwrap();
+
+            info!("Position: {:?}", position);
+        }
+    }
+
     Ok(())
 }
