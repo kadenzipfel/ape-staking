@@ -6,6 +6,11 @@ use std::{convert::TryFrom, sync::Arc, time::Duration};
 use tracing::{info, subscriber};
 use tracing_subscriber::FmtSubscriber;
 
+use crate::{bindings::*, constants::*};
+
+mod bindings;
+mod constants;
+
 // CLI Options
 #[derive(Debug, Options, Clone)]
 pub struct Opts {
@@ -49,6 +54,11 @@ async fn run<P: JsonRpcClient + 'static>(opts: Opts, provider: Provider<P>) -> a
 
     let static_provider =
         Arc::new(Provider::<Http>::try_from(&opts.rpc_url).expect("Failed to initialize provider"));
+
+    let staking = Staking::new(
+        STAKING_CONTRACT.parse::<Address>().unwrap(),
+        static_provider.clone(),
+    );
 
     Ok(())
 }
